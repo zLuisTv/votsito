@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link"; 
 
 export default function Page() {
     return <div>
@@ -9,7 +8,7 @@ export default function Page() {
                     <p>Usted ya lo tiene</p>
                 </div>
                 <div>
-                    <Link href="/">
+                    <a href="/">
                         <Image
                             className="border rounded-full p-4 dark:invert"
                             src="/arrow_left.png"
@@ -18,7 +17,7 @@ export default function Page() {
                             height={75}
                             priority
                         />
-                    </Link>
+                    </a>
                 </div>
             </div>
         </main>
