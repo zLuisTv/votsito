@@ -135,7 +135,7 @@ export default function Page() {
                   <div
                     key={piece}
                     onClick={(e) => handleSelectMobile(piece, e)}
-                    className={`cursor-pointer flex-shrink-0 border ${isSelected ? 'border-blue-500' : 'border-gray-400'}`}
+                    className={`cursor-pointer flex-shrink-0 border-4 ${isSelected ? 'border-blue-500' : 'border-gray-400'}`}
                     style={{ width: 64, height: 64 }}
                   >
                     <Image
