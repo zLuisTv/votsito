@@ -7,7 +7,6 @@ interface PuzzleBoardProps {
   isMobile: boolean;
   onBoardClick: (index: number, e: React.MouseEvent) => void;
   onBoardPointerUp: (index: number, e: React.PointerEvent) => void;
-  // Opcional: índices de celdas en error
   errorCells?: number[];
 }
 
@@ -26,10 +25,9 @@ export default function PuzzleBoard({
         return (
           <div
             key={index}
-            className={`board-cell relative w-[100px] h-[100px] flex items-center justify-center transition-all duration-300 ${errorCells.includes(index)
-                ? 'border-red-500 animate-bounce'
-                : 'border border-gray-500'
-              } bg-gray-200`}
+            className={`board-cell relative w-[100px] h-[100px] flex items-center justify-center transition-all duration-300 ${
+              isError ? 'border-red-500 animate-bounce' : 'border border-gray-500'
+            } bg-gray-200`}
             onClick={isMobile ? (e) => onBoardClick(index, e) : undefined}
             onPointerUp={!isMobile ? (e) => onBoardPointerUp(index, e) : undefined}
           >
@@ -42,7 +40,6 @@ export default function PuzzleBoard({
               />
             )}
           </div>
-
         );
       })}
     </div>

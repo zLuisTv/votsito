@@ -1,19 +1,19 @@
 'use client';
-
 import { useEffect, useRef } from 'react';
 
 export default function BackgroundVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
-  let resumeTimer: ReturnType<typeof setTimeout>;
+  const resumeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleUserInteraction = () => {
       // Solo en móviles
       if (window.innerWidth <= 768 && videoRef.current) {
         videoRef.current.pause();
-        clearTimeout(resumeTimer);
-        // Reanuda después de 1 segundo sin interacción
-        resumeTimer = setTimeout(() => {
+        if (resumeTimerRef.current) {
+          clearTimeout(resumeTimerRef.current);
+        }
+        resumeTimerRef.current = window.setTimeout(() => {
           videoRef.current?.play();
         }, 1000);
       }
@@ -25,7 +25,9 @@ export default function BackgroundVideo() {
     return () => {
       window.removeEventListener('scroll', handleUserInteraction);
       window.removeEventListener('touchmove', handleUserInteraction);
-      clearTimeout(resumeTimer);
+      if (resumeTimerRef.current) {
+        clearTimeout(resumeTimerRef.current);
+      }
     };
   }, []);
 
