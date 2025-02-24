@@ -123,7 +123,7 @@ export default function Puzzle() {
   return (
     <>
       <div className="relative flex flex-col items-center justify-center min-h-screen p-4" style={{ touchAction: 'none' }}>
-        <h1 className="text-2xl font-bold mb-4">Puzzle</h1>
+        <h1 className="text-4xl font-bold mb-4">Puzzle</h1>
         {!pieces ? (
           <div>Cargando...</div>
         ) : (
