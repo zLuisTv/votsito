@@ -1,0 +1,136 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import PuzzleCarousel from './PuzzleCarousel';
+import PuzzleBoard from './PuzzleBoard';
+import PuzzlePreview from './PuzzlePreview';
+
+export default function Puzzle() {
+  const gridSize = 3;
+
+  // Detección de móvil (umbral 768px, ajustable según necesidad)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Genera el orden aleatorio de piezas (solo en cliente)
+  const [pieces, setPieces] = useState<number[] | null>(null);
+  useEffect(() => {
+    const ordenAleatorio = [...Array(gridSize * gridSize).keys()].sort(() => Math.random() - 0.5);
+    setPieces(ordenAleatorio);
+  }, []);
+
+  // Estado para las piezas colocadas en el tablero
+  const [placedPieces, setPlacedPieces] = useState<(number | null)[]>(Array(gridSize * gridSize).fill(null));
+
+  // Estado para la pieza en "drag" o seleccionada (para móvil)
+  const [draggingPiece, setDraggingPiece] = useState<number | null>(null);
+  const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
+
+  // Handlers para PC (drag & drop)
+  const handlePointerDown = (piece: number, e: React.PointerEvent) => {
+    if (!isMobile) {
+      e.preventDefault();
+      setDraggingPiece(piece);
+      setDragPos({ x: e.clientX, y: e.clientY });
+    }
+  };
+
+  const handleBoardPointerUp = (index: number, e: React.PointerEvent) => {
+    if (!isMobile && draggingPiece !== null) {
+      e.preventDefault();
+      if (draggingPiece === index) {
+        const newPlacedPieces = [...placedPieces];
+        newPlacedPieces[index] = draggingPiece;
+        setPlacedPieces(newPlacedPieces);
+      }
+      setDraggingPiece(null);
+      setDragPos(null);
+    }
+  };
+
+  // Handlers para móvil (click para seleccionar y luego click en celda)
+  const handleSelectMobile = (piece: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isMobile) setDraggingPiece(piece);
+  };
+
+  const handleBoardClick = (index: number, e: React.MouseEvent) => {
+    if (isMobile && draggingPiece !== null) {
+      e.preventDefault();
+      if (draggingPiece === index) {
+        const newPlacedPieces = [...placedPieces];
+        newPlacedPieces[index] = draggingPiece;
+        setPlacedPieces(newPlacedPieces);
+      }
+      setDraggingPiece(null);
+      setDragPos(null);
+    }
+  };
+
+  // Solo en PC: actualizar la posición del preview mientras se arrastra
+  useEffect(() => {
+    if (!isMobile) {
+      const handlePointerMove = (e: PointerEvent) => {
+        e.preventDefault();
+        if (draggingPiece !== null) {
+          setDragPos({ x: e.clientX, y: e.clientY });
+        }
+      };
+      if (draggingPiece !== null) {
+        window.addEventListener('pointermove', handlePointerMove);
+      }
+      return () => window.removeEventListener('pointermove', handlePointerMove);
+    }
+  }, [draggingPiece, isMobile]);
+
+  // Solo en PC: cancelar el arrastre si se suelta fuera del tablero
+  useEffect(() => {
+    if (!isMobile) {
+      const handlePointerUp = (e: PointerEvent) => {
+        if (draggingPiece !== null) {
+          if (!(e.target as HTMLElement).classList.contains('board-cell')) {
+            setDraggingPiece(null);
+            setDragPos(null);
+          }
+        }
+      };
+      if (draggingPiece !== null) {
+        window.addEventListener('pointerup', handlePointerUp);
+      }
+      return () => window.removeEventListener('pointerup', handlePointerUp);
+    }
+  }, [draggingPiece, isMobile]);
+
+  return (
+    <div className="relative flex flex-col items-center justify-center min-h-screen p-4" style={{ touchAction: 'none' }}>
+      <h1 className="text-2xl font-bold mb-4">Puzzle</h1>
+      {!pieces ? (
+        <div>Cargando...</div>
+      ) : (
+        <>
+          <PuzzleCarousel
+            pieces={pieces}
+            placedPieces={placedPieces}
+            isMobile={isMobile}
+            draggingPiece={draggingPiece}
+            onSelectMobile={handleSelectMobile}
+            onPointerDown={handlePointerDown}
+          />
+          <PuzzleBoard
+            gridSize={gridSize}
+            placedPieces={placedPieces}
+            isMobile={isMobile}
+            onBoardClick={handleBoardClick}
+            onBoardPointerUp={handleBoardPointerUp}
+          />
+        </>
+      )}
+      {!isMobile && <PuzzlePreview draggingPiece={draggingPiece} dragPos={dragPos} />}
+    </div>
+  );
+}
