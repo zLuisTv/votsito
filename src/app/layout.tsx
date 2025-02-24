@@ -27,7 +27,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="relative min-h-screen">
+          <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover">
+            <source src="/background_web.mp4" type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
+          <div className="relative z-10">
+            {children}
+          </div>
+        </div>
       </body>
     </html>
   );

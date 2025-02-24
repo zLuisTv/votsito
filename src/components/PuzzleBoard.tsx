@@ -17,7 +17,7 @@ export default function PuzzleBoard({
   onBoardPointerUp,
 }: PuzzleBoardProps) {
   return (
-    <div className="grid grid-cols-3 gap-1 w-[300px] h-[300px] border border-gray-700 bg-white">
+    <div className="grid grid-cols-3 gap-1 w-[340px] h-[350px] p-4 rounded-lg bg-gray-200 bg-opacity-30 border border-gray-500">
       {Array.from({ length: gridSize * gridSize }, (_, index) => (
         <div
           key={index}

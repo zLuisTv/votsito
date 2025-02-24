@@ -19,7 +19,7 @@ export default function PuzzleCarousel({
   onPointerDown,
 }: PuzzleCarouselProps) {
   return (
-    <div className="w-full overflow-x-auto flex space-x-2 p-2 bg-white shadow-md rounded-md mb-4 scrollbar-hide">
+    <div className={`w-full md:w-[450px] overflow-x-auto flex space-x-1 p-[15px] bg-gray-100 bg-opacity-70 shadow rounded-md mb-4 scrollbar-hide`}>
       {pieces.map(piece => {
         if (placedPieces.includes(piece)) return null;
         if (isMobile) {
@@ -28,9 +28,8 @@ export default function PuzzleCarousel({
             <div
               key={piece}
               onClick={(e) => onSelectMobile(piece, e)}
-              className={`cursor-pointer flex-shrink-0 border-4 ${
-                isSelected ? 'border-blue-500' : 'border-gray-400'
-              }`}
+              className={`cursor-pointer flex-shrink-0 border-4 ${isSelected ? 'border-blue-500' : 'border-gray-400'
+                }`}
               style={{ width: 64, height: 64 }}
             >
               <Image
