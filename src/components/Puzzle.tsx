@@ -34,6 +34,8 @@ export default function Puzzle() {
   const [dragPos, setDragPos] = useState<{ x: number; y: number } | null>(null);
 
   // Handlers para PC (drag & drop)
+  const [errorCells, setErrorCells] = useState<number[]>([]);
+
   const handlePointerDown = (piece: number, e: React.PointerEvent) => {
     if (!isMobile) {
       e.preventDefault();
@@ -49,11 +51,18 @@ export default function Puzzle() {
         const newPlacedPieces = [...placedPieces];
         newPlacedPieces[index] = draggingPiece;
         setPlacedPieces(newPlacedPieces);
+      } else {
+        // Activa error en la celda equivocada
+        setErrorCells(prev => [...prev, index]);
+        setTimeout(() => {
+          setErrorCells(prev => prev.filter(cell => cell !== index));
+        }, 500); // La animación dura 500ms
       }
       setDraggingPiece(null);
       setDragPos(null);
     }
   };
+
 
   // Handlers para móvil (click para seleccionar y luego click en celda)
   const handleSelectMobile = (piece: number, e: React.MouseEvent) => {
@@ -68,11 +77,18 @@ export default function Puzzle() {
         const newPlacedPieces = [...placedPieces];
         newPlacedPieces[index] = draggingPiece;
         setPlacedPieces(newPlacedPieces);
+      } else {
+        // Activa error en la celda equivocada
+        setErrorCells(prev => [...prev, index]);
+        setTimeout(() => {
+          setErrorCells(prev => prev.filter(cell => cell !== index));
+        }, 500);
       }
       setDraggingPiece(null);
       setDragPos(null);
     }
   };
+
 
   // Solo en PC: actualizar la posición del preview mientras se arrastra
   useEffect(() => {
@@ -142,7 +158,9 @@ export default function Puzzle() {
               isMobile={isMobile}
               onBoardClick={handleBoardClick}
               onBoardPointerUp={handleBoardPointerUp}
+              errorCells={errorCells}
             />
+
           </>
         )}
         {!isMobile && <PuzzlePreview draggingPiece={draggingPiece} dragPos={dragPos} />}
