@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import PuzzleCarousel from './PuzzleCarousel';
 import PuzzleBoard from './PuzzleBoard';
 import PuzzlePreview from './PuzzlePreview';
+import Image from 'next/image';
 
 export default function Puzzle() {
   const gridSize = 3;
 
-  // Detección de móvil (umbral 768px, ajustable según necesidad)
+  // Detección de móvil (umbral 768px, ajustable)
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -106,6 +107,18 @@ export default function Puzzle() {
     }
   }, [draggingPiece, isMobile]);
 
+  // Verificamos si el puzzle está completo
+  const isComplete = pieces !== null && placedPieces.every(piece => piece !== null);
+
+  // Función para reiniciar el puzzle
+  const handleReset = () => {
+    const newOrder = [...Array(gridSize * gridSize).keys()].sort(() => Math.random() - 0.5);
+    setPieces(newOrder);
+    setPlacedPieces(Array(gridSize * gridSize).fill(null));
+    setDraggingPiece(null);
+    setDragPos(null);
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen p-4" style={{ touchAction: 'none' }}>
       <h1 className="text-2xl font-bold mb-4">Puzzle</h1>
@@ -131,6 +144,26 @@ export default function Puzzle() {
         </>
       )}
       {!isMobile && <PuzzlePreview draggingPiece={draggingPiece} dragPos={dragPos} />}
+      
+      {/* Overlay con la foto original y botón de reinicio cuando el puzzle está completo */}
+      {isComplete && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col items-center justify-center z-50">
+          <h2 className="text-white text-3xl mb-4">¡Puzzle Completado!</h2>
+          <Image
+            src="/foto1.jpg"
+            alt="Foto original"
+            width={300}
+            height={300}
+            style={{ objectFit: 'cover' }}
+          />
+          <button
+            onClick={handleReset}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Comenzar de nuevo
+          </button>
+        </div>
+      )}
     </div>
   );
 }
