@@ -64,6 +64,7 @@ export default function Page() {
     setYesScale(1);
     setNoPhraseIndex(0);
     setGifSrc("/GifLove.gif");
+    setClickedNoOnce(false)
   };
 
   return (
