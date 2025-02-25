@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import HomeButton from "@/components/HomeButton";
 
 const phrases = [
@@ -21,7 +20,6 @@ const phrases = [
 ];
 
 export default function Page() {
-  const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
   const [yesScale, setYesScale] = useState(1);
   const [noPhraseIndex, setNoPhraseIndex] = useState(0);
