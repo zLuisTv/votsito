@@ -6,8 +6,10 @@ import PuzzleBoard from './PuzzleBoard';
 import PuzzlePreview from './PuzzlePreview';
 import HomeButton from "@/components/HomeButton";
 import Image from 'next/image';
+import { useRouter } from "next/navigation";
 
 export default function Puzzle() {
+  const router = useRouter();
   const gridSize = 3;
 
   // Detección de móvil (umbral 768px, ajustable)
@@ -136,9 +138,15 @@ export default function Puzzle() {
     setDragPos(null);
   };
 
+  // Botón que dirige a /yesornot (aunque ya estemos aquí)
+  const handleYesOrNotClick = () => {
+    router.push("/yesornot");
+  };
+
   return (
     <>
       <div className="relative flex flex-col items-center justify-center min-h-screen p-4" style={{ touchAction: 'none' }}>
+
         <h1 className="text-4xl font-bold mb-4">Puzzle</h1>
         {!pieces ? (
           <div>Cargando...</div>
@@ -168,17 +176,18 @@ export default function Puzzle() {
         {/* Overlay con la foto original y botón de reinicio cuando el puzzle está completo */}
         {isComplete && (
           <div className="fixed inset-0 bg-black bg-opacity-75 flex flex-col items-center justify-center z-50">
-            <h2 className="text-white text-3xl mb-4">¡Puzzle Completado!</h2>
+            <h2 className="text-white text-3xl mb-4">¡Excelente!</h2>
             <Image
+              className='rounded-lg'
               src="/foto1.jpg"
               alt="Foto original"
-              width={300}
-              height={300}
+              width={350}
+              height={350}
               style={{ objectFit: 'cover' }}
             />
             <button
               onClick={handleReset}
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-4 px-4 py-2 bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 text-white rounded hover:bg-blue-600"
             >
               Comenzar de nuevo
             </button>
@@ -186,6 +195,14 @@ export default function Puzzle() {
         )}
       </div>
       <HomeButton />
+
+      {/* Botón "Yes or Not" encima del HomeButton */}
+      <button
+        onClick={handleYesOrNotClick}
+        className="fixed bottom-20 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-700 transition"
+      >
+        Siguiente
+      </button>
 
     </>
   );
