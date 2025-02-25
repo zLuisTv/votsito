@@ -13,7 +13,8 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        pixel: ['Pixelify Sans']
+        pixel: ['Pixelify Sans'],
+        bebas: ['Bebas Neue']
       },
     },
   },

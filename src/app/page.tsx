@@ -17,7 +17,7 @@ export default function Home() {
           priority
         />
         <p className="font-[family-name:var(--font-geist-mono)] text-xl font-bold">Tops Apodos</p>
-        <ol className="list-inside list-decimal text-lg  sm:text-left font-[family-name:var(--font-geist-mono)]">
+        <ol className="list-inside list-disc text-lg  sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">Vot.</li>
           <li className="mb-2">Nuv.</li>
           <li className="mb-2">Caramelito.</li>
