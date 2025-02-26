@@ -37,7 +37,7 @@ export default function Page() {
   const [gifSrc, setGifSrc] = useState("/GifLove.gif");
   const [clickedNoOnce, setClickedNoOnce] = useState(false);
   const [heartLoaded, setHeartLoaded] = useState(false);
-
+  const [shake, setShake] = useState(false);
 
   // Al hacer click en "No", se cambia la frase y se incrementa el tamaño del botón "Sí"
   const handleNoClick = () => {
@@ -50,6 +50,8 @@ export default function Page() {
       return next === 0 ? 1 : next;
     });
     setYesScale((prev) => prev + 0.1);
+    setShake(true);
+    setTimeout(() => setShake(false), 800);
   };
 
 
@@ -96,7 +98,7 @@ export default function Page() {
         </button>
         <button
           onClick={handleNoClick}
-          className="bg-red-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-600 transition-all duration-300"
+          className={`bg-red-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-red-600 transition-all duration-300 ${shake ? "shake-horizontal" : ""}`}
           style={{ position: "relative" }}
         >
           {phrases[noPhraseIndex]}
@@ -108,11 +110,11 @@ export default function Page() {
       {/* Overlay de éxito */}
       {success && (
         <div className="fixed inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50">
-           {!heartLoaded && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white">
-                <p className="text-xl text-black">Cargando...</p>
-              </div>
-            )}
+          {!heartLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white">
+              <p className="text-xl text-black">Cargando...</p>
+            </div>
+          )}
           <h2
             className="text-6xl font-bebas font-bold text-red-500 mb-4 text-center"
             style={{ textShadow: "6px 6px 4px rgba(0,0,0,0.5)" }}
@@ -141,7 +143,6 @@ export default function Page() {
           </button>
         </div>
       )}
-
 
       <HomeButton />
     </div>
