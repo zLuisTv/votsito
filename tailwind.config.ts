@@ -14,7 +14,8 @@ export default {
       },
       fontFamily: {
         pixel: ['Pixelify Sans'],
-        bebas: ['Bebas Neue']
+        bebas: ['Bebas Neue'],
+        quicksand: ['Quicksand'],
       },
     },
   },

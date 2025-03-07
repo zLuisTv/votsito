@@ -7,13 +7,14 @@ import { Lrc } from 'lrc-kit';
 const tracks = [
     {
         title: "Frances Limon",
-        artist: "Artista 1",
+        artist: "Los Enanitos Verdes",
         src: "/music/Frances Limon.mp3",
         cover: "/music_bg.png",
         lrc: `
-        [00:00.00]La, la, la, la, la, la, la, la, la, la, la, la
-[00:08.00]La, la, la, la, la, la, la, la, la, la, la, la
-[00:13.00]♪
+[00:00.00]La, la, la, la, la, la, la, la, la, la, la, la
+[00:04.00]La, la, la, la, la, la, la, la, la, la, la, la
+[00:08.00]La, la, la, la, la, la, la, la, la, lo
+[00:14.00]♪ ♪ ♪
 
 [00:46.00]Todo tiene el color
 [00:54.00]De tus ojos, ¿cómo ves?
@@ -35,7 +36,7 @@ const tracks = [
 [02:31.00]Las luces de la ciudad se apagarán
 [02:39.00]Te besaré, me besarás 
 
-[02:47.00]♪
+[02:47.00]♪ ♪ ♪
 [03:18.00]La, la, la, la, la, la, la, la, la, la, la, la
 [03:22.00]La, la, la, la, la, la, la, la, la, la, la, la
 [03:26.00]La, la, la, la, la, la, la, la, la, la
@@ -56,14 +57,61 @@ const tracks = [
     },
     {
         title: "Amores Lejanos",
-        artist: "Artista 2",
+        artist: "Los Enanitos Verdes",
         src: "/music/Amores Lejanos.mp3",
         cover: "/music_bg.png",
-        lrc: `[00:00.00] Comienza la canción
-[00:04.00] Primera parte de la letra
-[00:12.00] Segunda parte de la letra
-[00:20.00] Tercera parte de la letra
-[00:28.00] Fin`
+        lrc: `
+[00:00.00]♪
+
+[00:17.00]Esta tarde no pasa nada
+[00:21.00]Las calles parecen desiertas
+[00:25.00]Carmencita se fue de viaje
+[00:29.00]Y quizás nunca más la vea
+
+[00:33.00]Yo mirando por la ventana
+[00:37.00]El asfalto brillando perlas
+[00:41.00]Los lugares que frecuentaba
+[00:45.00]No me atraen ni me interesan
+
+[00:50.00]Y aunque hoy no estás, voy planificando
+[00:58.00]Una y otra vez, amores lejanos
+[01:07.00]Y aunque hoy no estás, te abro mis brazos
+[01:14.00]Yo me quedaré aquí esperando
+
+[01:20.00]♪ ♪ ♪
+
+[01:39.00]Esta tarde no pasa nada
+[01:43.00]0No me puedo olvidar de ella
+[01:47.00]Hace un mes que la estoy pensando
+[01:51.00]Y no sé si de mí se acuerda
+
+[01:55.00]Mi futuro es algo incierto
+[01:59.00]Pero ese no es el problema
+[02:03.00]¿Dónde pongo mis sentimientos?
+[02:07.00]Si esta noche hay Luna llena
+
+[02:12.00]Y aunque hoy no estás, voy planificando
+[02:20.00]Una y otra vez, amores lejanos
+[02:28.00]Y aunque hoy no estás, te abro mis brazos
+[02:36.00]Yo me quedaré aquí esperando
+
+[02:44.00]♪ ♪ ♪
+
+[03:16.00]Y aunque hoy no estás, voy planificando
+[03:24.00]Una y otra vez, amores lejanos
+[03:32.00]Y aunque hoy no estás, te abro mis brazos
+[03:40.00]Yo me quedaré aquí esperando
+
+[03:49.00]Oh, oh
+[03:53.00]Oh, oh
+[03:57.00]Oh (oh)
+[04:01.00]Oh
+
+[04:12.00]Y aunque hoy no estás, voy planificando
+[04:20.00]Una y otra vez, amores lejanos
+[04:28.00]Y aunque hoy no estás, te abro mis brazos
+[04:36.00]Yo me quedaré aquí esperando
+`
     },
 ];
 
@@ -71,7 +119,6 @@ export default function MusicPlayer() {
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
-    const [currentLyric, setCurrentLyric] = useState("");
     const [lyrics, setLyrics] = useState<{ time: number; text: string }[]>([]);
     const audioRef = useRef<HTMLAudioElement>(null);
 
@@ -86,7 +133,6 @@ export default function MusicPlayer() {
         } else {
             setLyrics([]);
         }
-        setCurrentLyric("");
     }, [currentTrackIndex]);
 
     // Actualizamos el tiempo actual del audio
@@ -104,16 +150,6 @@ export default function MusicPlayer() {
         };
     }, []);
 
-    // Seleccionamos la línea activa según el tiempo actual
-    useEffect(() => {
-        if (!lyrics.length) return;
-
-        // Buscamos la última línea cuyo timestamp sea menor o igual al currentTime
-        const activeLine = lyrics.reduce((prev, curr) => {
-            return curr.time <= currentTime ? curr : prev;
-        }, { time: 0, text: "" });
-        setCurrentLyric(activeLine.text);
-    }, [currentTime, lyrics]);
 
     const handlePlayPause = () => {
         if (!isPlaying) {
@@ -143,6 +179,30 @@ export default function MusicPlayer() {
             audioRef.current.currentTime = 0;
         }
     };
+
+    // Calcula el índice de la línea activa
+    const activeIndex = lyrics.findIndex((line, index) => {
+        const next = lyrics[index + 1];
+        return line.time <= currentTime && (!next || next.time > currentTime);
+    });
+    const clampedActiveIndex = activeIndex === -1 ? 0 : activeIndex;
+
+    // Queremos mostrar tres líneas: la anterior, la activa y la siguiente.
+    // Si el índice activo es mayor que 0, usamos clampedActiveIndex - 1; de lo contrario, iniciamos en 0.
+    const startIndex = clampedActiveIndex > 0 ? clampedActiveIndex - 1 : 0;
+    const displayLyrics = lyrics.slice(startIndex, startIndex + 3);
+
+    // Suponemos que cada línea tiene una altura fija
+    const lineHeight = 40; // px
+
+    // Queremos que el contenedor tenga altura suficiente para 3 líneas (por ejemplo, 140px) y que la línea activa quede centrada.
+    // Calculamos el top deseado para la línea activa:
+    const containerHeight = 140; // px
+    const desiredActiveTop = (containerHeight - lineHeight) / 2; // en este ejemplo, (140-40)/2 = 50px
+    // El top actual de la línea activa dentro del slice es: offset = clampedActiveIndex - startIndex
+    const offset = clampedActiveIndex - startIndex;
+    // Calculamos el translateY necesario:
+    const translateY = desiredActiveTop - (offset * lineHeight);
 
     return (
         <div className="flex flex-col items-center p-6 pt-12 bg-gray-900 text-white w-full max-w-md mx-auto shadow-lg min-h-screen">
@@ -189,8 +249,26 @@ export default function MusicPlayer() {
             <audio ref={audioRef} src={tracks[currentTrackIndex].src} onEnded={handleNext} />
 
             {/* Visualización de letra sincronizada */}
-            <div className="fixed bottom-0 left-0 w-full bg-green-600 text-black text-center py-4 text-lg font-semibold">
+            {/* <div className="fixed bottom-0 left-0 w-full bg-green-600 text-black text-center py-4 text-lg font-semibold">
                 {currentLyric || "♪"}
+            </div> */}
+
+            <div className="mt-6 w-full h-[140px] overflow-hidden">
+                <div
+                    className="transition-all duration-300"
+                    style={{ transform: `translateY(${translateY}px)` }}
+                >
+                    {displayLyrics.map((line, index) => (
+                        <p
+                            key={index}
+                            className={`text-center text-lg transition-all duration-300  font-quicksand ${index === offset ? "text-white font-bold" : "text-white opacity-50"
+                                }`}
+                            style={{ height: `${lineHeight}px`, lineHeight: `${lineHeight}px` }}
+                        >
+                            {line.text}
+                        </p>
+                    ))}
+                </div>
             </div>
             {/* Botón para regresar a Home */}
             <div className="fixed top-4 right-4">
