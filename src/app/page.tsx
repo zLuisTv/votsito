@@ -36,6 +36,13 @@ export default function Home() {
           >
             Puzzle
           </Link>
+          <Link
+            className="rounded-full border border-solid border-black/[.08] bg-white bg-opacity-20 dark:border-white transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-base sm:text-base h-10 sm:h-12 p-4 sm:px-5 sm:min-w-44"
+            href="/spotify"
+            rel="noopener noreferrer"
+          >
+            Spotify
+          </Link>
         </div>
       </main>
     </div>

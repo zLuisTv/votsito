@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { Lrc } from 'lrc-kit';
@@ -191,6 +191,15 @@ export default function MusicPlayer() {
             {/* Visualización de letra sincronizada */}
             <div className="fixed bottom-0 left-0 w-full bg-green-600 text-black text-center py-4 text-lg font-semibold">
                 {currentLyric || "♪"}
+            </div>
+            {/* Botón para regresar a Home */}
+            <div className="fixed top-4 right-4">
+                <Link
+                    href="/"
+                    className="bg-gray-800 text-white px-4 py-2 rounded shadow-md hover:bg-gray-700 transition"
+                >
+                    Regresar
+                </Link>
             </div>
         </div>
 
