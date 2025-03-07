@@ -13,43 +13,44 @@ const tracks = [
         lrc: `
         [00:00.00]La, la, la, la, la, la, la, la, la, la, la, la
 [00:08.00]La, la, la, la, la, la, la, la, la, la, la, la
-[00:16.00]La, la, la, la, la, la, la, la, la, la, lo
+[00:13.00]♪
 
-[00:24.00]Todo tiene el color
-[00:28.00]De tus ojos, ¿cómo ves?
-[00:32.00]Todo cambia, no así tu voz
-[00:36.00]Cuando me hablas en francés limón
+[00:46.00]Todo tiene el color
+[00:54.00]De tus ojos, ¿cómo ves?
+[01:02.00]Todo cambia, no así tu voz
+[01:09.00]Cuando me hablas en francés limón
 
-[00:40.00]En un barco de papel, yo volveré
-[00:44.00]Por ti, mi amor, francés limón
-[00:48.00]Las luces de la ciudad se apagarán
-[00:52.00]Te besaré, me besarás
+[01:15.00]En un barco de papel, yo volveré
+[01:23.00]Por ti, mi amor, francés limón
+[01:31.00]Las luces de la ciudad se apagarán
+[01:38.00]Te besaré, me besarás 
 
-[00:58.00]Me encanta tu actitud
-[01:02.00]Dios conserve tu salud
-[01:06.00]Sólo por mirarte comprendí
-[01:10.00]Para qué yo vine aquí
+[01:48.00]Me encanta tu actitud
+[01:55.00]Dios conserve tu salud
+[02:03.00]Sólo por mirarte comprendí
+[02:10.00]Para qué yo vine aquí
 
-[01:16.00]En un barco de papel, yo volveré
-[01:20.00]Por ti, mi amor, francés limón
-[01:24.00]Las luces de la ciudad se apagarán
-[01:28.00]Te besaré, me besarás
+[02:16.00]En un barco de papel, yo volveré
+[02:24.00]Por ti, mi amor, francés limón
+[02:31.00]Las luces de la ciudad se apagarán
+[02:39.00]Te besaré, me besarás 
 
-[01:34.00]La, la, la, la, la, la, la, la, la, la, la, la
-[01:42.00]La, la, la, la, la, la, la, la, la, la, la, la
-[01:50.00]La, la, la, la, la, la, la, la, la, la
+[02:47.00]♪
+[03:18.00]La, la, la, la, la, la, la, la, la, la, la, la
+[03:22.00]La, la, la, la, la, la, la, la, la, la, la, la
+[03:26.00]La, la, la, la, la, la, la, la, la, la
 
-[02:00.00]Me encanta tu actitud
-[02:04.00]Y tus ojos, ¿cómo ves?
-[02:08.00]Todo cambia, no así tu voz
-[02:12.00]Cuando me hablas en francés limón
+[03:34.00]Me encanta tu actitud
+[03:42.00]Y tus ojos, ¿cómo ves?
+[03:49.00]Todo cambia, no así tu voz
+[03:57.00]Cuando me hablas en francés limón
 
-[02:18.00]En un barco de papel, yo volveré
-[02:22.00]Por ti, mi amor, francés limón
-[02:26.00]Las luces de la ciudad se apagarán
-[02:30.00]Te besaré, me besarás
+[04:03.00]En un barco de papel, yo volveré
+[04:11.00]Por ti, mi amor, francés limón
+[04:18.00]Las luces de la ciudad se apagarán
+[04:26.00]Te besaré, me besarás
 
-[02:40.00]Instrumental...
+[04:34.00]♪ ♪ ♪
 
 [05:10.00]Fin`
     },
@@ -78,12 +79,13 @@ export default function MusicPlayer() {
     useEffect(() => {
         const currentTrack = tracks[currentTrackIndex];
         if (currentTrack.lrc) {
-            const parsed = Lrc.parse(currentTrack.lrc) as unknown as { time: number; text: string }[];
-            setLyrics(parsed); // parsed.lines es un array de objetos con { time, text }
+            // Parsea el LRC y obtén el array de líneas desde la propiedad 'lyrics'
+            const parsed = Lrc.parse(currentTrack.lrc) as unknown as { lyrics: { timestamp: number; content: string }[] };
+            // Mapea cada línea para que tenga las propiedades 'time' y 'text'
+            setLyrics(parsed.lyrics.map(line => ({ time: line.timestamp, text: line.content })));
         } else {
             setLyrics([]);
         }
-        // Reiniciamos la letra al cambiar de pista
         setCurrentLyric("");
     }, [currentTrackIndex]);
 
