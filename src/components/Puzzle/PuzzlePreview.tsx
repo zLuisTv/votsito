@@ -20,7 +20,7 @@ export default function PuzzlePreview({ draggingPiece, dragPos }: PuzzlePreviewP
       }}
     >
       <Image
-        src={`/puz${draggingPiece + 1}.jpg`}
+        src={`/puzzle/puz${draggingPiece + 1}.jpg`}
         alt={`Dragging piece ${draggingPiece + 1}`}
         width={64}
         height={64}

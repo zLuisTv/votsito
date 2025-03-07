@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import BackgroundVideo from '@/components/BackgroundVideo';
+import BackgroundVideoWrapper from '@/components/BackgroundVideoWrapper';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="relative min-h-screen">
-          <BackgroundVideo />
+          <BackgroundVideoWrapper />
           <div className="relative z-10">
             {children}
           </div>

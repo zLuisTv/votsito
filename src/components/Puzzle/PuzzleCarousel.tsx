@@ -38,7 +38,7 @@ export default function PuzzleCarousel({
               style={{ width: 64, height: 64 }}
             >
               <Image
-                src={`/puz${piece + 1}.jpg`}
+                src={`/puzzle/puz${piece + 1}.jpg`}
                 alt={`Puzzle piece ${piece + 1}`}
                 width={64}
                 height={64}
@@ -56,7 +56,7 @@ export default function PuzzleCarousel({
               style={{ width: 64, height: 64 }}
             >
               <Image
-                src={`/puz${piece + 1}.jpg`}
+                src={`/puzzle/puz${piece + 1}.jpg`}
                 alt={`Puzzle piece ${piece + 1}`}
                 width={64}
                 height={64}

@@ -33,7 +33,7 @@ export default function PuzzleBoard({
           >
             {placedPieces[index] !== null && (
               <Image
-                src={`/puz${placedPieces[index]! + 1}.jpg`}
+                src={`/puzzle/puz${placedPieces[index]! + 1}.jpg`}
                 alt={`Placed piece ${placedPieces[index]! + 1}`}
                 fill
                 style={{ objectFit: 'cover' }}
