@@ -13,9 +13,9 @@ export default {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        pixel: ['Pixelify Sans'],
         bebas: ['Bebas Neue'],
         quicksand: ['Quicksand'],
+        dancing: ['Dancing Script'],
       },
     },
   },

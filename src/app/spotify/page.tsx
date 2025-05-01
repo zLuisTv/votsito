@@ -1,4 +1,6 @@
 "use client";
+
+// import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
@@ -9,7 +11,7 @@ const tracks = [
         title: "Frances Limon",
         artist: "Los Enanitos Verdes",
         src: "/music/Frances Limon.mp3",
-        cover: "/music_bg.png",
+        cover: "/music/thumbnail/frances limon.jpeg",
         lrc: `
 [00:00.00]La, la, la, la, la, la, la, la, la, la, la, la
 [00:04.00]La, la, la, la, la, la, la, la, la, la, la, la
@@ -180,29 +182,36 @@ export default function MusicPlayer() {
         }
     };
 
-    // Calcula el índice de la línea activa
     const activeIndex = lyrics.findIndex((line, index) => {
         const next = lyrics[index + 1];
         return line.time <= currentTime && (!next || next.time > currentTime);
     });
     const clampedActiveIndex = activeIndex === -1 ? 0 : activeIndex;
 
-    // Queremos mostrar tres líneas: la anterior, la activa y la siguiente.
-    // Si el índice activo es mayor que 0, usamos clampedActiveIndex - 1; de lo contrario, iniciamos en 0.
-    const startIndex = clampedActiveIndex > 0 ? clampedActiveIndex - 1 : 0;
-    const displayLyrics = lyrics.slice(startIndex, startIndex + 3);
+    const startIndex = clampedActiveIndex >= 2 ? clampedActiveIndex - 2 : 0;
+    const displayLyrics = lyrics.slice(startIndex, startIndex + 5);
 
-    // Suponemos que cada línea tiene una altura fija
-    const lineHeight = 40; // px
-
-    // Queremos que el contenedor tenga altura suficiente para 3 líneas (por ejemplo, 140px) y que la línea activa quede centrada.
-    // Calculamos el top deseado para la línea activa:
-    const containerHeight = 140; // px
-    const desiredActiveTop = (containerHeight - lineHeight) / 2; // en este ejemplo, (140-40)/2 = 50px
-    // El top actual de la línea activa dentro del slice es: offset = clampedActiveIndex - startIndex
+    const lineHeight = 40;
+    const containerHeight = 250;
+    const desiredActiveTop = (containerHeight - lineHeight) / 2;
     const offset = clampedActiveIndex - startIndex;
-    // Calculamos el translateY necesario:
     const translateY = desiredActiveTop - (offset * lineHeight);
+
+    const getLineStyle = (index: number) => {
+        const diff = index - offset;
+        if (diff === -2) return "text-white opacity-70";
+        if (diff === -1) return "text-white opacity-80";
+        if (diff === 0) return "text-white font-bold";
+        if (diff === 1) return "text-black";
+        if (diff === 2) return "text-black opacity-80";
+        return "text-black";
+    };
+
+    const formatTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, "0")}`;
+    };
 
     return (
         <div className="flex flex-col items-center p-6 pt-12 bg-gray-900 text-white w-full max-w-md mx-auto shadow-lg min-h-screen">
@@ -221,14 +230,31 @@ export default function MusicPlayer() {
             <p className="text-gray-400 mb-4">{tracks[currentTrackIndex].artist}</p>
 
             {/* Barra de progreso */}
-            <div className="w-full h-1 bg-gray-600 rounded-full mb-4 relative">
+            <div
+                className="w-full h-1 bg-gray-600 rounded-full mb-1 relative cursor-pointer"
+                onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const duration = audioRef.current?.duration || 1;
+                    const newTime = (clickX / rect.width) * duration;
+                    if (audioRef.current) {
+                        audioRef.current.currentTime = newTime;
+                        setCurrentTime(newTime);
+                    }
+                }}
+            >
                 <div
-                    className="h-full bg-green-500 rounded-full"
+                    className="h-full bg-pink-300 rounded-full"
                     style={{
                         width: `${(currentTime / (audioRef.current?.duration || 1)) * 100}%`,
                     }}
                 ></div>
             </div>
+            {/* Muestra el tiempo actual y la duración */}
+            <div className="text-center text-sm text-gray-300 mb-4">
+                {formatTime(currentTime)} / {formatTime(audioRef.current?.duration || 0)}
+            </div>
+
 
             {/* Controles */}
             <div className="flex gap-4 mb-4">
@@ -237,7 +263,7 @@ export default function MusicPlayer() {
                 </button>
                 <button
                     onClick={handlePlayPause}
-                    className="bg-green-500 px-6 py-2 rounded text-black font-bold"
+                    className="bg-pink-300 px-6 py-2 rounded text-black font-bold"
                 >
                     {isPlaying ? "⏸" : "▶"}
                 </button>
@@ -249,29 +275,18 @@ export default function MusicPlayer() {
             <audio ref={audioRef} src={tracks[currentTrackIndex].src} onEnded={handleNext} />
 
             {/* Visualización de letra sincronizada */}
-            {/* <div className="fixed bottom-0 left-0 w-full bg-green-600 text-black text-center py-4 text-lg font-semibold">
-                {currentLyric || "♪"}
-            </div> */}
-
-            <div className="mt-6 w-full h-[140px] overflow-hidden">
-                <div
-                    className="transition-all duration-300"
-                    style={{ transform: `translateY(${translateY}px)` }}
-                >
+            <div className="mt-6 w-full h-[250px] overflow-hidden bg-pink-300 rounded-xl pl-5">
+                <div className="transition-all duration-300" style={{ transform: `translateY(${translateY}px)` }}>
                     {displayLyrics.map((line, index) => (
-                        <p
-                            key={index}
-                            className={`text-center text-lg transition-all duration-300  font-quicksand ${index === offset ? "text-white font-bold" : "text-white opacity-50"
-                                }`}
-                            style={{ height: `${lineHeight}px`, lineHeight: `${lineHeight}px` }}
-                        >
+                        <p key={index} className={`text-xl transition-all duration-300 font-quicksand font-semibold ${getLineStyle(index)}`}
+                            style={{ height: `${lineHeight}px`, lineHeight: `${lineHeight}px` }}>
                             {line.text}
                         </p>
                     ))}
                 </div>
             </div>
             {/* Botón para regresar a Home */}
-            <div className="fixed top-4 right-4">
+            <div className="fixed bottom-4 right-4">
                 <Link
                     href="/"
                     className="bg-gray-800 text-white px-4 py-2 rounded shadow-md hover:bg-gray-700 transition"
