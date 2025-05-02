@@ -74,7 +74,17 @@ body {
     opacity: 0.2;
   }
 
-  50% {
+  25% {
     opacity: 1;
+  }
+
+  75% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0ch;
   }
 }

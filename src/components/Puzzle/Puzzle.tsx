@@ -179,7 +179,7 @@ export default function Puzzle() {
             <h2 className="text-white text-3xl mb-4">¡Excelente!</h2>
             <Image
               className='rounded-lg'
-              src="/foto1.jpg"
+              src="/general/foto1.jpg"
               alt="Foto original"
               width={350}
               height={350}

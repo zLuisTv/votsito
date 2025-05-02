@@ -40,7 +40,7 @@ export default function BackgroundVideo() {
       playsInline
       className="absolute top-0 left-0 w-full h-full object-cover"
     >
-      <source src="/background_web.mp4" type="video/mp4" />
+      <source src="/general/background_web.mp4" type="video/mp4" />
       Tu navegador no soporta el elemento de video.
     </video>
   );

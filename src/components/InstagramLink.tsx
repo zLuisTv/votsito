@@ -11,7 +11,7 @@ export default function InstagramLink() {
           >
             <Image
               className="invert dark:invert-0"
-              src="/ig_logo.png"
+              src="/general/instagram.png"
               alt="IG logo"
               width={25}
               height={25}

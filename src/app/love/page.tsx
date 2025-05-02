@@ -34,7 +34,7 @@ export default function Page() {
   const [yesScale, setYesScale] = useState(1);
   const [noPhraseIndex, setNoPhraseIndex] = useState(0);
   const [success, setSuccess] = useState(false);
-  const [gifSrc, setGifSrc] = useState("/GifLove.gif");
+  const [gifSrc, setGifSrc] = useState("/general/GifLove.gif");
   const [clickedNoOnce, setClickedNoOnce] = useState(false);
   const [heartLoaded, setHeartLoaded] = useState(false);
   const [shake, setShake] = useState(false);
@@ -42,7 +42,7 @@ export default function Page() {
   // Al hacer click en "No", se cambia la frase y se incrementa el tamaño del botón "Sí"
   const handleNoClick = () => {
     if (!clickedNoOnce) {
-      setGifSrc("/GifEnojado.gif");
+      setGifSrc("/general/GifEnojado.gif");
       setClickedNoOnce(true);
     }
     setNoPhraseIndex((prev) => {
@@ -66,7 +66,7 @@ export default function Page() {
     // Reinicia valores
     setYesScale(1);
     setNoPhraseIndex(0);
-    setGifSrc("/GifLove.gif");
+    setGifSrc("/general/GifLove.gif");
     setClickedNoOnce(false)
   };
 
@@ -123,7 +123,7 @@ export default function Page() {
           </h2>
           <div className="relative w-48 h-48 overflow-hidden rounded-full mb-4">
             <Image
-              src="/Heart.png"
+              src="/general/Heart.png"
               alt="Heart"
               fill
               style={{
